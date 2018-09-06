@@ -24,8 +24,7 @@ void ATankAIController::Tick(float DeltaTime)
 ATank* ATankAIController::GetControlledTank() const
 {
 	ATank* AITank = Cast<ATank>(GetPawn());
-	if (AITank) { UE_LOG(LogTemp, Warning, TEXT("AIController %S possesed Tank Pawn: %s"), *(GetName()) , *(AITank->GetName())); }
-	else { UE_LOG(LogTemp, Warning, TEXT("AIController %s not possesing a tank pawn!!!"), *(GetName())); }
+	if (!AITank) { UE_LOG(LogTemp, Warning, TEXT("AIController %s not possesing a tank pawn!!!"), *(GetName())); }
 	return AITank;
 }
 
@@ -38,7 +37,5 @@ ATank* ATankAIController::GetPlayerTank() const
 		UE_LOG(LogTemp, Warning, TEXT("AI Tank did not find any Player Tank in the world!!!")); 
 		return nullptr;
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("AI Tank found %s in the world!!!"), *(PlayerTank->GetName()));
 	return Cast<ATank>(PlayerTank);
 }
