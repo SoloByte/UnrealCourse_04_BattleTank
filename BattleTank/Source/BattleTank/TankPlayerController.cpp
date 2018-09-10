@@ -35,7 +35,9 @@ void ATankPlayerController::AimTowardsCrosshair()
 		
 		GetControlledTank()->AimAt(HitLocation);
 	}
-	
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Linetrace without hit."));
+	}
 }
 
 bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation) const
@@ -48,9 +50,7 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation) const
 
 	FVector LookDirection;
 	if (GetLookDirection(ScreenLocation, LookDirection)) {
-		if (GetLookVectorHitLocation(LookDirection, HitLocation)) {
-			return true;
-		}
+		return GetLookVectorHitLocation(LookDirection, HitLocation);
 	}
 	
 	return false;
