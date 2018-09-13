@@ -2,6 +2,7 @@
 
 #include "TankPlayerController.h"
 #include "Engine/World.h"
+#include "BattleTank/Public/Tank.h"
 
 void ATankPlayerController::Tick(float DeltaTime)
 {
@@ -35,9 +36,9 @@ void ATankPlayerController::AimTowardsCrosshair()
 		
 		GetControlledTank()->AimAt(HitLocation);
 	}
-	else {
+	/*else {
 		UE_LOG(LogTemp, Warning, TEXT("Linetrace without hit."));
-	}
+	}*/
 }
 
 bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation) const
