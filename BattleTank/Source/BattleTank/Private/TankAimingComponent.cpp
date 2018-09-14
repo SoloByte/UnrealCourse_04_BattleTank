@@ -74,10 +74,10 @@ void UTankAimingComponent::AimAt(FVector WorldLocationToAimAt, float LaunchSpeed
 	{
 		auto DesiredAimDirecion = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(DesiredAimDirecion);
-	}
+	}/*
 	else {
 		MoveBarrelTowards(FVector(0));
-	}
+	}*/
 }
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
