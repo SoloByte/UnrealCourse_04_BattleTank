@@ -6,6 +6,7 @@
 #include "TankAimingComponent.h"
 #include "Engine/World.h"
 #include "BattleTank/Public/Projectile.h"
+#include "BattleTank/Public/TankMovementComponent.h"
 
 // Sets default values
 ATank::ATank()
