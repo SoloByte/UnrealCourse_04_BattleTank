@@ -35,32 +35,32 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(BlueprintReadOnly, Category = "State")
+	UPROPERTY(BlueprintReadOnly, Category = State)
 	EFiringStatus FiringStatus = EFiringStatus::Reloading;
 
 public:	
-	UFUNCTION(BlueprintCallable, Category = "Setup")
+	UFUNCTION(BlueprintCallable, Category = Setup)
 	void InitializeComponent(UTankBarrel* TankBarrelToSet, UTankTurret* TankTurretToSet);
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void AimAt(FVector WorldLocationToAimAt);
 
-	UFUNCTION(BlueprintCallable, Category = "Firing")
+	UFUNCTION(BlueprintCallable, Category = Firing)
 	void Fire();
 
 private:
-	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float LaunchSpeed = 10000;
 
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
 	void MoveBarrelTowards(FVector AimDirection);
 
-	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float ReloadTimeInSeconds = 3;
 
 	double LastFireTime = 0;

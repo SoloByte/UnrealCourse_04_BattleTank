@@ -8,16 +8,7 @@ ATank::ATank()
  	// Set this pawn to call Tick() every frame.  
 	//You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-	//TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("AimingComponent"));
 }
-
-// Called when the game starts or when spawned
-void ATank::BeginPlay()
-{
-	//Needed for Blueprint Begin Play to be called !!!
-	Super::BeginPlay();
-}
-
 
 // Called to bind functionality to input
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
