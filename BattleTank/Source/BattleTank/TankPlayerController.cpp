@@ -2,7 +2,7 @@
 
 #include "TankPlayerController.h"
 #include "Engine/World.h"
-#include "BattleTank/Public/Tank.h"
+#include "TankAimingComponent.h"
 
 void ATankPlayerController::Tick(float DeltaTime)
 {
@@ -13,32 +13,26 @@ void ATankPlayerController::Tick(float DeltaTime)
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	GetControlledTank();
-}
-
-ATank* ATankPlayerController::GetControlledTank() const
-{
-	APawn* pawn = GetPawn();
-	if (!pawn) 
-	{
-		return nullptr;
+	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	if (ensure(AimingComponent)) {
+		FoundAimingComponent(AimingComponent);
 	}
-	ATank* tank = Cast<ATank>(pawn);
-	return tank;
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Player Controller cant find TankAimingComponent at BeginPlay!"));
+	}
+	
 }
 
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	if (!GetControlledTank()) { return; }
+	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent)) { return; }
 
 	FVector HitLocation;
 	if (GetSightRayHitLocation(HitLocation)) {
 		
-		GetControlledTank()->AimAt(HitLocation);
+		AimingComponent->AimAt(HitLocation);
 	}
-	/*else {
-		UE_LOG(LogTemp, Warning, TEXT("Linetrace without hit."));
-	}*/
 }
 
 bool ATankPlayerController::GetSightRayHitLocation(FVector &HitLocation) const
