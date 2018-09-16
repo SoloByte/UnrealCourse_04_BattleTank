@@ -13,6 +13,7 @@ void ATankPlayerController::Tick(float DeltaTime)
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+	if (!GetPawn()) { return; }
 	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 	if (ensure(AimingComponent)) {
 		FoundAimingComponent(AimingComponent);
@@ -25,7 +26,10 @@ void ATankPlayerController::BeginPlay()
 
 void ATankPlayerController::AimTowardsCrosshair()
 {
+	if (!GetPawn()) { return; }
+
 	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+
 	if (!ensure(AimingComponent)) { return; }
 
 	FVector HitLocation;

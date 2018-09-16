@@ -20,5 +20,14 @@ public:
 	void SetThrottle(float Throttle);
 	
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	float TrackMaxDrivingForce = 240000; //40000kg * 6m/s/s
+	float TrackMaxDrivingForce = 40000000; //40000kg * 6m/s/s
+
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	float SidewaysFrictionCoefficient = 1.15;
+
+private:
+	UTankTrack();
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	void ApplySidewaysFriction(float DeltaTime);
 };

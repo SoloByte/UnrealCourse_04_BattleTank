@@ -16,7 +16,6 @@ enum class EFiringStatus : uint8
 	Locked
 };
 
-
 //Forward Declaration
 class UTankBarrel;
 class UTankTurret;
@@ -27,9 +26,16 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
-	// Sets default values for this component's properties
+public:
 	UTankAimingComponent();
+
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void InitializeComponent(UTankBarrel* TankBarrelToSet, UTankTurret* TankTurretToSet);
+
+	void AimAt(FVector WorldLocationToAimAt);
+
+	UFUNCTION(BlueprintCallable, Category = Firing)
+	void Fire();
 
 protected:
 	// Called when the game starts
@@ -38,18 +44,12 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = State)
 	EFiringStatus FiringStatus = EFiringStatus::Reloading;
 
-public:	
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void InitializeComponent(UTankBarrel* TankBarrelToSet, UTankTurret* TankTurretToSet);
-
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	void AimAt(FVector WorldLocationToAimAt);
-
-	UFUNCTION(BlueprintCallable, Category = Firing)
-	void Fire();
 
 private:
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	bool IsBarrelMoving();
+
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float LaunchSpeed = 10000;
 
@@ -63,5 +63,10 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float ReloadTimeInSeconds = 3;
 
+	UPROPERTY(EditDefaultsOnly, Category = Aiming)
+	float TargetLockedTolerance = 0.025f;
+
 	double LastFireTime = 0;
+
+	FVector DesiredAimDirection = FVector(0);
 };

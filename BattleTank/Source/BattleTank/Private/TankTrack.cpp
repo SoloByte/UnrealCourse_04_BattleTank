@@ -2,6 +2,33 @@
 
 #include "TankTrack.h"
 
+UTankTrack::UTankTrack()
+{
+	PrimaryComponentTick.bCanEverTick = true;
+}
+
+void UTankTrack::TickComponent
+(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	ApplySidewaysFriction(DeltaTime);
+}
+
+void UTankTrack::ApplySidewaysFriction(float DeltaTime)
+{
+	auto SlippageSpeed = FVector::DotProduct
+	(GetComponentVelocity(), GetRightVector());
+
+	auto CorrectionAcceleration = -(SlippageSpeed / DeltaTime) * GetRightVector();
+
+
+	auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
+													//halfed because there are two tracks
+	auto CorrectionForce = (TankRoot->GetMass() * CorrectionAcceleration) / 2;
+	TankRoot->AddForce(CorrectionForce * SidewaysFrictionCoefficient);
+}
+
 void UTankTrack::SetThrottle(float Throttle)
 {
 	Throttle = FMath::Clamp<float>(Throttle, -1, +1);
