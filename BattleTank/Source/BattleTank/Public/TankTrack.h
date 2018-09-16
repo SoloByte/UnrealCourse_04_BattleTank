@@ -14,20 +14,27 @@ class BATTLETANK_API UTankTrack : public UStaticMeshComponent
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual void BeginPlay() override;
 	
 public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void SetThrottle(float Throttle);
 	
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	float TrackMaxDrivingForce = 40000000; //40000kg * 6m/s/s
+	float TrackMaxDrivingForce = 55000000;
 
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	float SidewaysFrictionCoefficient = 1.15;
+	float SidewaysFrictionCoefficient = 1;
 
 private:
 	UTankTrack();
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void ApplySidewaysFriction(float DeltaTime);
+	void ApplySidewaysFriction();
+
+	void DriveTrack();
+	float CurrentThrottle = 0;
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 };

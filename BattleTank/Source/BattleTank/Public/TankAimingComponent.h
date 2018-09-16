@@ -37,6 +37,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Firing)
 	void Fire();
 
+	EFiringStatus GetFiringStatues() const;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

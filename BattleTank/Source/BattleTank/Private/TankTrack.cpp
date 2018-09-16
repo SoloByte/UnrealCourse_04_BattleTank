@@ -1,25 +1,25 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankTrack.h"
+#include "Engine/World.h"
 
 UTankTrack::UTankTrack()
 {
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
-void UTankTrack::TickComponent
-(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UTankTrack::BeginPlay()
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	ApplySidewaysFriction(DeltaTime);
+	Super::BeginPlay();
+	OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
 }
 
-void UTankTrack::ApplySidewaysFriction(float DeltaTime)
+void UTankTrack::ApplySidewaysFriction()
 {
 	auto SlippageSpeed = FVector::DotProduct
 	(GetComponentVelocity(), GetRightVector());
 
+	auto DeltaTime = GetWorld()->GetDeltaSeconds();
 	auto CorrectionAcceleration = -(SlippageSpeed / DeltaTime) * GetRightVector();
 
 
@@ -29,18 +29,26 @@ void UTankTrack::ApplySidewaysFriction(float DeltaTime)
 	TankRoot->AddForce(CorrectionForce * SidewaysFrictionCoefficient);
 }
 
-void UTankTrack::SetThrottle(float Throttle)
+void UTankTrack::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, 
+	UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit)
 {
-	Throttle = FMath::Clamp<float>(Throttle, -1, +1);
+	DriveTrack();
+	ApplySidewaysFriction();
+	CurrentThrottle = 0;
+}
 
-	auto ForceApplied = GetForwardVector() * TrackMaxDrivingForce * Throttle;
+void UTankTrack::DriveTrack()
+{
+	auto ForceApplied = GetForwardVector() * TrackMaxDrivingForce * CurrentThrottle;
 	auto ForceLocation = GetComponentLocation();
 
 	auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
 	TankRoot->AddForceAtLocation(ForceApplied, ForceLocation);
+}
 
-	/*auto name = GetName();
-	UE_LOG(LogTemp, Warning, TEXT("%s Throttle: %s"), *name, *ForceApplied.ToString());*/
+void UTankTrack::SetThrottle(float Throttle)
+{
+	CurrentThrottle = FMath::Clamp<float>(CurrentThrottle + Throttle, -1, +1);
 }
 
 
