@@ -41,10 +41,10 @@ public:
 	EFiringStatus GetFiringStatues() const;
 
 	UFUNCTION(BlueprintCallable, Category = Firing)
-	int GetCurAmmo() const;
+	int32 GetCurAmmo() const;
 
 	UFUNCTION(BlueprintCallable, Category = Firing)
-	int GetMaxAmmo() const;
+	int32 GetMaxAmmo() const;
 
 	UFUNCTION(BlueprintCallable, Category = Firing)
 	float GetReloadFinishedPercentage() const;
@@ -57,7 +57,7 @@ protected:
 	EFiringStatus FiringStatus = EFiringStatus::Reloading;
 
 	UPROPERTY(EditAnywhere, Category = Firing)
-	int MaxAmmo = 15;
+	int32 MaxAmmo = 15;
 
 private:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -84,7 +84,7 @@ private:
 
 	FVector DesiredAimDirection = FVector(0);
 
-	int CurAmmo = 0;
+	int32 CurAmmo = 0;
 
 	float ReloadFinishedPercentage = 0;
 };

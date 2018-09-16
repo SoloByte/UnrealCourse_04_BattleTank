@@ -59,12 +59,12 @@ void UTankAimingComponent::TickComponent
 }
 
 
-int UTankAimingComponent::GetMaxAmmo() const
+int32 UTankAimingComponent::GetMaxAmmo() const
 {
 	return MaxAmmo;
 }
 
-int UTankAimingComponent::GetCurAmmo() const
+int32 UTankAimingComponent::GetCurAmmo() const
 {
 	return CurAmmo;
 }
