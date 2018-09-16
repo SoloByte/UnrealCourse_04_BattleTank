@@ -23,6 +23,7 @@ void UTankAimingComponent::BeginPlay()
 
 	//every tank needs to wait for initial reload before firing
 	LastFireTime = GetWorld()->GetTimeSeconds();
+	CurAmmo = MaxAmmo;
 }
 
 void UTankAimingComponent::InitializeComponent
@@ -38,9 +39,16 @@ void UTankAimingComponent::TickComponent
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
-	if ((GetWorld()->GetTimeSeconds() - LastFireTime) < ReloadTimeInSeconds){
+	auto CurReloadTime = GetWorld()->GetTimeSeconds() - LastFireTime;
 
+	if (CurAmmo <= 0) {
+		FiringStatus = EFiringStatus::NoAmmo;
+		ReloadFinishedPercentage = 0;
+	}
+	else if (CurReloadTime < ReloadTimeInSeconds){
 		FiringStatus = EFiringStatus::Reloading;
+		ReloadFinishedPercentage =
+			FMath::Clamp<float>(CurReloadTime / ReloadTimeInSeconds, 0, 1);
 	}
 	else if (IsBarrelMoving()) {
 		FiringStatus = EFiringStatus::Aiming;
@@ -50,10 +58,27 @@ void UTankAimingComponent::TickComponent
 	}
 }
 
+
+int UTankAimingComponent::GetMaxAmmo() const
+{
+	return MaxAmmo;
+}
+
+int UTankAimingComponent::GetCurAmmo() const
+{
+	return CurAmmo;
+}
+
+float UTankAimingComponent::GetReloadFinishedPercentage() const
+{
+	return ReloadFinishedPercentage;
+}
+
 EFiringStatus UTankAimingComponent::GetFiringStatues() const
 {
 	return FiringStatus;
 }
+
 
 bool UTankAimingComponent::IsBarrelMoving()
 {
@@ -108,12 +133,10 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 
 void UTankAimingComponent::Fire()
 {
-	if (FiringStatus != EFiringStatus::Reloading)
+	if (FiringStatus == EFiringStatus::Locked || FiringStatus == EFiringStatus::Aiming)
 	{
 		if (!ensure(Barrel)) { return; }
 		if (!ensure(ProjectileBlueprint)) { return; }
-
-		LastFireTime = GetWorld()->GetTimeSeconds();
 
 		auto Projectile = GetWorld()->SpawnActor<AProjectile>(
 			ProjectileBlueprint,
@@ -122,6 +145,12 @@ void UTankAimingComponent::Fire()
 			);
 
 		Projectile->LaunchProjectile(LaunchSpeed);
+
+		LastFireTime = GetWorld()->GetTimeSeconds();
+		FiringStatus = EFiringStatus::Reloading;
+
+		CurAmmo--;
+		CurAmmo = FMath::Clamp<int>(CurAmmo, 0, MaxAmmo);
 	}
 }
 
