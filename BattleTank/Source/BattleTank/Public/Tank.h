@@ -6,6 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTankDelegate);
 
 UCLASS()
 class BATTLETANK_API ATank : public APawn
@@ -23,10 +24,17 @@ public:
 		AActor* DamageCauser
 	) override;
 
+	FTankDelegate TankDeath;
+
+	UFUNCTION(BlueprintPure, Category = Health)
+	float GetHealthPercentage() const;
+
+	virtual void BeginPlay() override;
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	int32 MaxHealth = 100;
 
 	UPROPERTY(VisibleAnywhere, Category = Health)
-	int32 CurrentHealth = MaxHealth;
+	int32 CurrentHealth;//Initialized in begin play
 };

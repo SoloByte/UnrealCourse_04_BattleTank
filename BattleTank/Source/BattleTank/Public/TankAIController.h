@@ -23,4 +23,11 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = Pathfinding)
 	float AcceptanceRadius = 10000;
+
+private:
+	virtual void SetPawn(APawn* InPawn) override;
+
+public:
+	UFUNCTION()
+	void OnPossessedTankDeath();
 };

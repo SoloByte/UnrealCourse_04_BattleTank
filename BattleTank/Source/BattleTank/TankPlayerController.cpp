@@ -3,11 +3,30 @@
 #include "TankPlayerController.h"
 #include "Engine/World.h"
 #include "TankAimingComponent.h"
+#include "Tank.h"
 
 void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	AimTowardsCrosshair();
+}
+
+//Gets called when the pawn is possessed by a controller 
+//we need that definite point in time to register to the tank death event
+void ATankPlayerController::SetPawn(APawn * InPawn)
+{
+	Super::SetPawn(InPawn);
+	if (InPawn) {
+		auto PossessedTank = Cast<ATank>(InPawn);
+		if (!ensure(PossessedTank)) { return; }
+
+		PossessedTank->TankDeath.AddUniqueDynamic(this, &ATankPlayerController::OnPossessedTankDeath);
+	}
+}
+
+void ATankPlayerController::OnPossessedTankDeath()
+{
+	StartSpectatingOnly();
 }
 
 void ATankPlayerController::BeginPlay()
