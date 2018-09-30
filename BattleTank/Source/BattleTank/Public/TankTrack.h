@@ -6,6 +6,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "TankTrack.generated.h"
 
+class ASprungWheel;
 /**
  * TankTrack is used to set maximum driving force, and to apply forces to the tank
  */
@@ -13,9 +14,6 @@ UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class BATTLETANK_API UTankTrack : public UStaticMeshComponent
 {
 	GENERATED_BODY()
-	
-protected:
-	virtual void BeginPlay() override;
 	
 public:
 	UFUNCTION(BlueprintCallable, Category = Input)
@@ -30,11 +28,10 @@ public:
 private:
 	UTankTrack();
 
-	void ApplySidewaysFriction();
+	//void ApplySidewaysFriction();
 
-	void DriveTrack();
-	float CurrentThrottle = 0;
+	void DriveTrack(float CurrentThrottle);
 
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+	TArray<ASprungWheel*>GetWheels() const;
+	
 };
